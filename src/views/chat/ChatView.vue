@@ -11,7 +11,7 @@
             <p v-if="msg.sender === 'user'" :class="['userMessage', 'message']">
               {{ msg.content }}
             </p>
-            <p v-else id="botMessage" class="message">{{ msg.content }}</p>
+            <p v-else id="botMessage" class="message">{{ msg.content ? msg.content : answer }}</p>
           </ChatMessage>
         </div>
       </a-scrollbar>
@@ -44,7 +44,7 @@
 import { IconSend } from '@arco-design/web-vue/es/icon'
 import ChatMessage from '@/components/message/ChatMessage.vue'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 
 let userMessage = ref('')
 let queryMessage = ref('')
@@ -53,27 +53,32 @@ let messageList = ref([])
 
 function sendMessage() {
   if (userMessage.value) {
-    submitChat(userMessage.value)
-    // adjustScroll()
+    displayMessage('user', userMessage.value)
+    displayMessage('bot')
+    submitChat()
   }
 }
-// function adjustScroll() {
-//   let chatBox = document.getElementById('chatBox')
-
-//   // 滚动到底部以显示新消息
-//   chatBox.scrollTop = chatBox.scrollHeight
-// }
-// 提交对话
-const submitChat = async (message) => {
-  const messageItem = {
-    id: String(messageList.value.length + 1),
-    content: message,
-    sender: 'user'
+function displayMessage(sender, message) {
+  if (sender === 'user') {
+    const messageItem = {
+      id: String(messageList.value.length + 1),
+      content: message,
+      sender: 'user'
+    }
+    messageList.value.push(messageItem)
+    queryMessage.value = message
+    userMessage.value = '' // 清空输入框
+  } else {
+    const messageItem = {
+      id: String(messageList.value.length + 1),
+      content: '',
+      sender: 'bot'
+    }
+    messageList.value.push(messageItem)
   }
-  messageList.value.push(messageItem)
-  queryMessage.value = message
-  userMessage.value = '' // 清空输入框
-
+}
+// 提交对话
+const submitChat = async () => {
   const ctrl = new AbortController() // 创建AbortController实例，以便中止请求
   await fetchEventSource('http://222.16.24.191:8000/generate-text/', {
     method: 'POST',
@@ -85,32 +90,27 @@ const submitChat = async (message) => {
     }),
     openWhenHidden: true, // 取消visibilityChange事件
     signal: ctrl.signal, // AbortSignal
-    async onmessage(ev) {
+    onmessage(ev) {
       const data = ev.data
+
       if (data != '{}') {
         answer.value += data
       }
-      await nextTick()
     },
     onclose() {
-      if (answer.value) {
-        const messageItem = {
-          id: String(messageList.value.length + 1),
-          content: answer.value,
-          sender: 'bot'
-        }
-        messageList.value.push(messageItem)
+      if (messageList.value.length > 0 && answer.value) {
+        const lastIndex = messageList.value.length - 1
+        messageList.value[lastIndex].content = answer.value
         answer.value = ''
       }
       // loading.value = false
     },
     onerror(err) {
-      const messageItem = {
-        id: String(messageList.value.length + 1),
-        content: '出错了，请重试',
-        sender: 'bot'
+      if (messageList.value.length > 0) {
+        const lastIndex = messageList.value.length - 1
+        messageList.value[lastIndex].content = '出错了，请刷新重试！'
+        answer.value = ''
       }
-      messageList.value.push(messageItem)
       // loading.value = false
       ctrl.abort()
       throw err // 直接抛出错误，避免反复调用
