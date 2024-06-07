@@ -35,6 +35,7 @@
             maxRows: 5
           }"
           allow-clear
+          @keydown.enter="onKeydown"
         />
         <a-button type="primary" class="sendButton" @click="sendMessage" :disabled="loading">
           <icon-send />
@@ -64,6 +65,13 @@ let loading = ref(false)
 let chatScrollbar = ref()
 const prompt = computed(() => store.state.prompt.prompt)
 
+function onKeydown(event) {
+  // 检查按下的键是否是回车键且没有按下Shift键
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault() // 阻止回车键的默认换行行为
+    sendMessage()
+  }
+}
 function sendMessage() {
   if (userMessage.value) {
     displayMessage('user', userMessage.value)
