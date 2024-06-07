@@ -5,7 +5,8 @@
       :style="{ width: 'fit-content', 'padding-top': '8px' }"
     >
       <a-avatar :style="{ backgroundColor: '#3370ff' }">
-        <icon-user />
+        <icon-user v-if="name == 'user'" />
+        <icon-robot v-else />
       </a-avatar>
     </div>
     <div class="textContent">
@@ -21,7 +22,7 @@
 </template>
 
 <script setup>
-import { IconUser } from '@arco-design/web-vue/es/icon'
+import { IconUser, IconRobot } from '@arco-design/web-vue/es/icon'
 import { defineProps } from 'vue'
 const props = defineProps({
   name: String,
