@@ -982,6 +982,7 @@ import GlobalHeader from "../components/header/GlobalHeader.vue";
 #basicLayout .header {
   background-color: var(--color-menu-light-bg);
   position: relative;
+  border-bottom: 1px solid #eee;
 }
 
 #basicLayout .content {

@@ -31,6 +31,7 @@ import SiderView from '@/views/chat/SiderView.vue'
 #chatLayout .header {
   background-color: var(--color-menu-light-bg);
   position: relative;
+  border-bottom: 1px solid #eee;
 }
 
 #chatLayout .content {
