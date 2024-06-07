@@ -33,9 +33,9 @@ watch(loading, (newValue) => {
 .typing::after {
   content: '';
   display: inline-block;
-  width: 0.15em; /* 光标的宽度 */
+  width: 0.5em; /* 光标的宽度 */
   height: 1.5em; /* 光标的高度，可以根据需要调整 */
-  background-color: #0a65cc;
+  background-color: #34495e;
 
   animation: blink-caret 0.75s step-end infinite; /* 应用光标闪烁动画 */
   vertical-align: bottom; /* 确保光标与文字基线对齐 */
