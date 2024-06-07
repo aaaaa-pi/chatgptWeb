@@ -5,7 +5,7 @@
       <a-scrollbar id="chatScrollbar" style="height: 100%; overflow: auto">
         <div v-for="(msg, index) in messageList" :key="index">
           <ChatMessage
-            :name="msg.sender === 'user' ? 'username' : 'botname'"
+            :name="msg.sender === 'user' ? 'user' : 'bot'"
             :messageClassName="msg.sender === 'user' ? 'userMessage' : 'botMessage'"
           >
             <p v-if="msg.sender === 'user'" :class="['userMessage', 'message']">

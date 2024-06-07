@@ -17,6 +17,9 @@
 
 <style scoped>
 #sider {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .title {
   padding: 0 16px 16px 28px !important;
@@ -24,7 +27,7 @@
 }
 .content {
   padding-left: 16px;
-  padding-right: 16px;
+  flex: 1;
 }
 .semi-input-textarea {
   background-color: transparent;
@@ -53,5 +56,6 @@
   resize: none;
   vertical-align: bottom;
   width: 100%;
+  height: 100%;
 }
 </style>
