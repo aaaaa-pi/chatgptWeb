@@ -2,22 +2,24 @@
   <div id="Chat">
     <h2 class="title">Preview</h2>
     <div id="chatBox">
-      <a-scrollbar id="chatScrollbar" style="height: 100%; overflow: auto">
-        <div v-for="(msg, index) in messageList" :key="index">
-          <ChatMessage
-            :name="msg.sender === 'user' ? 'user' : 'bot'"
-            :messageClassName="msg.sender === 'user' ? 'userMessage' : 'botMessage'"
-          >
-            <p v-if="msg.sender === 'user'" :class="['userMessage', 'message']">
-              {{ msg.content }}
-            </p>
-            <div v-else id="botMessage" class="message">
-              <p>
-                {{ msg.content ? msg.content : answer }}
-                <CursorLoading :loading="loading" />
+      <a-scrollbar ref="chatScrollbar" style="height: 100%; overflow: auto">
+        <div class="groupMessage">
+          <div v-for="(msg, index) in messageList" :key="index">
+            <ChatMessage
+              :name="msg.sender === 'user' ? 'user' : 'bot'"
+              :messageClassName="msg.sender === 'user' ? 'userMessage' : 'botMessage'"
+            >
+              <p v-if="msg.sender === 'user'" :class="['userMessage', 'message']">
+                {{ msg.content }}
               </p>
-            </div>
-          </ChatMessage>
+              <div v-else id="botMessage" class="message">
+                <p>
+                  {{ msg.content ? msg.content : answer }}
+                  <CursorLoading :loading="loading" />
+                </p>
+              </div>
+            </ChatMessage>
+          </div>
         </div>
       </a-scrollbar>
     </div>
@@ -34,7 +36,7 @@
           }"
           allow-clear
         />
-        <a-button type="primary" class="sendButton" @click="sendMessage">
+        <a-button type="primary" class="sendButton" @click="sendMessage" :disabled="loading">
           <icon-send />
         </a-button>
       </div>
@@ -57,10 +59,12 @@ let queryMessage = ref('')
 let answer = ref('')
 let messageList = ref([])
 let loading = ref(false)
+let chatScrollbar = ref()
 
 function sendMessage() {
   if (userMessage.value) {
     displayMessage('user', userMessage.value)
+    loading.value = true
     displayMessage('bot')
     submitChat()
   }
@@ -98,9 +102,7 @@ const submitChat = async () => {
     openWhenHidden: true, // 取消visibilityChange事件
     signal: ctrl.signal, // AbortSignal
     onmessage(ev) {
-      loading.value = true
       const data = ev.data
-
       if (data != '{}') {
         answer.value += data
       }
@@ -141,6 +143,10 @@ const submitChat = async () => {
   flex: 1;
   width: 100%;
   overflow: hidden;
+}
+::v-deep(.arco-scrollbar-container) {
+  display: flex;
+  flex-direction: column-reverse;
 }
 ::v-deep(.arco-scrollbar) {
   height: 100%;
