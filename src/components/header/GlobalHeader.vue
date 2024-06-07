@@ -14,7 +14,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { routes } from '@/router/routes'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import checkAccess from '@/access/checkAccess'
 
@@ -28,8 +28,6 @@ const visibleRoutes = computed(() => {
     if (item.meta?.hideInMenu || item.path === '/user') {
       return false
     }
-
-    console.log(loginUser, item.meta?.access)
     return checkAccess(loginUser, item.meta?.access)
   })
 })
@@ -41,7 +39,7 @@ router.afterEach((to) => {
   selectedKeys.value = [to.path]
 })
 const doMenuClick = (key) => {
-  if (key === '0') {
+  if (key === '/') {
     router.push({
       path: '/'
     })
@@ -51,12 +49,16 @@ const doMenuClick = (key) => {
     })
   }
 }
+
+onMounted(() => {
+  let currentPath = router.currentRoute.value.path
+  selectedKeys.value = [currentPath]
+})
 </script>
 
 <style scoped>
 #globalHeader {
   height: 70px;
-  border-bottom: 1px solid #eee;
 }
 .title-bar {
   padding-top: 10px;
