@@ -13,6 +13,7 @@
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "axios": "^1.7.2",
+    "lodash.debounce": "^4.0.8",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-vue-components": "^0.27.0",
     "vue": "^3.4.21",
