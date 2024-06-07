@@ -5,8 +5,10 @@ export default {
   namespaced: true,
   state: {
     loginUser: {
-      userName: '用户',
-      userRole: 'user'
+      // userName: '用户',
+      // userRole: 'user'
+      userName: '未登录',
+      userRole: 'notLogin'
     }
   }
   // actions: {

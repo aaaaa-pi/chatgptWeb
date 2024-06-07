@@ -8,11 +8,15 @@
         </a-menu-item>
       </a-menu>
     </a-col>
+    <a-col flex="100px">
+      <userAvatar />
+    </a-col>
   </a-row>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router'
+import userAvatar from '@/components/header/userAvatar.vue'
 import { routes } from '@/router/routes'
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
