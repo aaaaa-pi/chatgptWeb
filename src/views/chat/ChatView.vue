@@ -11,7 +11,12 @@
             <p v-if="msg.sender === 'user'" :class="['userMessage', 'message']">
               {{ msg.content }}
             </p>
-            <p v-else id="botMessage" class="message">{{ msg.content ? msg.content : answer }}</p>
+            <div v-else id="botMessage" class="message">
+              <p>
+                {{ msg.content ? msg.content : answer }}
+                <CursorLoading :loading="loading" />
+              </p>
+            </div>
           </ChatMessage>
         </div>
       </a-scrollbar>
@@ -43,6 +48,7 @@
 <script setup>
 import { IconSend } from '@arco-design/web-vue/es/icon'
 import ChatMessage from '@/components/message/ChatMessage.vue'
+import CursorLoading from '@/components/message/CursorLoading.vue'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { ref } from 'vue'
 
@@ -50,6 +56,7 @@ let userMessage = ref('')
 let queryMessage = ref('')
 let answer = ref('')
 let messageList = ref([])
+let loading = ref(false)
 
 function sendMessage() {
   if (userMessage.value) {
@@ -91,6 +98,7 @@ const submitChat = async () => {
     openWhenHidden: true, // 取消visibilityChange事件
     signal: ctrl.signal, // AbortSignal
     onmessage(ev) {
+      loading.value = true
       const data = ev.data
 
       if (data != '{}') {
@@ -103,7 +111,7 @@ const submitChat = async () => {
         messageList.value[lastIndex].content = answer.value
         answer.value = ''
       }
-      // loading.value = false
+      loading.value = false
     },
     onerror(err) {
       if (messageList.value.length > 0) {
@@ -111,7 +119,7 @@ const submitChat = async () => {
         messageList.value[lastIndex].content = '出错了，请刷新重试！'
         answer.value = ''
       }
-      // loading.value = false
+      loading.value = false
       ctrl.abort()
       throw err // 直接抛出错误，避免反复调用
     }
@@ -147,6 +155,7 @@ const submitChat = async () => {
   border-radius: 10px;
   width: fit-content;
   max-width: 80%;
+  white-space: pre-wrap;
 }
 
 .userMessage {
