@@ -48,11 +48,12 @@ const debouncedSetPrompt = debounce(setPrompt, 500)
   flex-direction: column;
 }
 .title {
-  padding: 0 16px 16px 28px !important;
+  padding: 8px 8px 8px 28px !important;
   border-bottom: 1px solid #eee;
 }
 .content {
   padding-left: 16px;
+  padding-top: 16px;
   flex: 1;
 }
 .semi-input-textarea {

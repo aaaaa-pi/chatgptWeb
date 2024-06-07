@@ -140,7 +140,7 @@ const submitChat = async () => {
   flex-direction: column;
 }
 .title {
-  padding: 0 16px 16px 28px !important;
+  padding: 8px 8px 8px 28px !important;
   border-bottom: 1px solid #eee;
 }
 #chatBox {
