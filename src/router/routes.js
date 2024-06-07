@@ -7,7 +7,6 @@ export const routes = [
     name: '主页',
     component: () => import(/* webpackChunkName: "home" */ '../views/home/HomeView.vue'),
     meta: {
-      // hideInMenu: true,
       layout: BasicLayout
     }
   },
@@ -16,7 +15,6 @@ export const routes = [
     name: 'chatgpt',
     component: () => import(/* webpackChunkName: "home" */ '../views/chat/ChatView.vue'),
     meta: {
-      // hideInMenu: true,
       layout: ChatLayout
     }
   },
@@ -25,7 +23,7 @@ export const routes = [
     name: '无权限',
     component: () => import(/* webpackChunkName: "401" */ '../views/error/UnauthorizedError.vue'),
     meta: {
-      // hideInMenu: true,
+      hideInMenu: true,
       layout: BasicLayout
     }
   },
