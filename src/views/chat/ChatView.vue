@@ -49,17 +49,20 @@
 
 <script setup>
 import { IconSend } from '@arco-design/web-vue/es/icon'
+import { useStore } from 'vuex'
 import ChatMessage from '@/components/message/ChatMessage.vue'
 import CursorLoading from '@/components/message/CursorLoading.vue'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
+const store = useStore()
 let userMessage = ref('')
 let queryMessage = ref('')
 let answer = ref('')
 let messageList = ref([])
 let loading = ref(false)
 let chatScrollbar = ref()
+const prompt = computed(() => store.state.prompt.prompt)
 
 function sendMessage() {
   if (userMessage.value) {
@@ -97,7 +100,8 @@ const submitChat = async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: queryMessage.value
+      query: queryMessage.value,
+      systemPrompt: prompt.value
     }),
     openWhenHidden: true, // 取消visibilityChange事件
     signal: ctrl.signal, // AbortSignal
@@ -150,6 +154,9 @@ const submitChat = async () => {
 }
 ::v-deep(.arco-scrollbar) {
   height: 100%;
+}
+::v-deep(.arco-scrollbar.arco-scrollbar-type-embed:hover .arco-scrollbar-thumb) {
+  opacity: 0;
 }
 .bottom-safe-area {
   padding: 12px;

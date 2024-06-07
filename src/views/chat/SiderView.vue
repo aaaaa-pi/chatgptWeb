@@ -7,13 +7,39 @@
         cols="4"
         rows="20"
         class="semi-input-textarea"
+        v-model="prompt"
         placeholder="请填写提示词优化chatgpt"
       ></textarea>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+import debounce from 'lodash/debounce'
+import { useStore } from 'vuex'
+const store = useStore()
+let prompt = ref('')
+
+/**
+ * 页面加载时，请求数据
+ */
+onMounted(() => {
+  if (localStorage.getItem('prompt')) {
+    prompt.value = localStorage.getItem('prompt')
+  }
+})
+watch(
+  () => prompt.value,
+  () => debouncedSetPrompt()
+)
+const setPrompt = () => {
+  store.commit('prompt/setPrompt', {
+    prompt: prompt.value
+  })
+}
+const debouncedSetPrompt = debounce(setPrompt, 500)
+</script>
 
 <style scoped>
 #sider {
